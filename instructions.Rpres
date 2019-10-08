@@ -81,6 +81,7 @@ Main dplyr helper verbs
 ```{r, include=FALSE}
 library(tidyverse)
 library(tidylog)
+library(lubridate)
 ```
 
 Helper functions with select()

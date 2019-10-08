@@ -5,11 +5,18 @@ date:
 autosize: true
 font-family: 'Georgia'
 
+What we will cover today
+===========================================
 
+- Dplyr main verbs
+- Rehshaping data
+- Joining two data sets
 
 Getting up to speed
 ==============================
 Workshop is aimed at advanced beginners and I will assume some familiarity with R and the tidyverse. We will spend a few minutes to refamiliarise ourselves with R.
+
+You will need to have `tidyverse` package installed and loaded. 
 
 Packages in R
 =====================

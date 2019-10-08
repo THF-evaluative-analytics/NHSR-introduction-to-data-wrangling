@@ -5,11 +5,18 @@ date:
 autosize: true
 font-family: 'Georgia'
 
+What we will cover today
+===========================================
 
+- Dplyr main verbs
+- Rehshaping data
+- Joining two data sets
 
 Getting up to speed
 ==============================
 Workshop is aimed at advanced beginners and I will assume some familiarity with R and the tidyverse. We will spend a few minutes to refamiliarise ourselves with R.
+
+You will need to have `tidyverse` package installed and loaded. 
 
 Packages in R
 =====================
@@ -368,32 +375,8 @@ Downloaded data from [NHSE website](https://www.england.nhs.uk/statistics/statis
 
 
 
-```r
-sitrep <- readRDS(here::here('sitrep.RDS')) # all calls
-sitrep_60sec <- readRDS(here::here('sitrep_60sec.RDS')) # calls answered within 60sec
-```
-Look at data. Is is tidy? 
 
 
-
-New tidyr package
-==========================================
-The `tidyr` package was updated early september. `Spread` and  `gather` have been replaced by `pivot_longer` and `pivot_wider`. 
-
-
-
-
-==========================================
-
-```r
-sitrep_long <- sitrep %>% 
-  pivot_longer(-c(NHS_111_area_name, year), names_to='day_month', values_to='calls')
-```
-Our data is long! But we can make it even tidier. Suggestions? 
-
-
-Sorting out the date
-===============================
 
 
 
@@ -405,5 +388,5 @@ Sorting out the date
 
 
 ```
-Error in ydm(date) : could not find function "ydm"
+Error in gzfile(file, "rb") : cannot open the connection
 ```

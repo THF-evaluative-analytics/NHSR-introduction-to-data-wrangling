@@ -5,6 +5,9 @@ date:
 autosize: true
 font-family: 'Georgia'
 
+
+
+
 What we will cover today
 ===========================================
 
@@ -24,15 +27,9 @@ Packages in R
 The first time you use it you need to install the package. 
 
 
-```r
-install.packages("tidyverse")
-```
 
 Load the package
 
-```r
-library(tidyverse)
-```
 
 The pipe
 ========================================
@@ -48,18 +45,8 @@ The pipe
 ==============================
 
 
-```r
-leave_house(get_dressed(get_out_of_bed(wake_up(me))))
-```
 VS
 
-```r
-me %>% 
-  wake_up() %>% 
-  get_out_of_bed() %>% 
-  get_dressed() %>% 
-  leave_house()
-```
 
 
 Rstudio tips
@@ -96,53 +83,23 @@ Helper functions you can use within select():
 Example select()
 ===============================
 
-```r
-# Select variables/columns 2 to 5 and save data as new_dat
-new_dat <- select(starwars, 2:5)
-
-# Drop variables height and mass (same as keeping all variables but height and mass)
-starwars %>% 
-  select( -height, -mass) 
-
-starwars %>% 
-  select(name, ends_with("color"))
-```
 
 Example filter
 ============================================
 
 
-```r
-starwars %>% 
-  filter(mass>80,  hair_color=="white")
-
-starwars %>% 
-  filter(is.na(hair_color))
-```
 
 
 Example mutate
 ===============================
 
 
-```r
-starwars %>% 
-  mutate(height_m=height/100, bmi=mass/(height_m^2), bmi=round(bmi, 1)) 
-```
 
 
 Example summarise
 ===================================
 
 
-```r
-starwars %>%
-  summarise(height_mean = mean(height, na.rm=TRUE))
-
-starwars %>%
-  group_by(homeworld) %>% 
-  summarise(height_max = max(height, na.rm=TRUE))
-```
 
 
 Exercise 1
@@ -178,43 +135,6 @@ Solution
 ============================================
 
 
-```r
-starwars %>% 
-  filter(height>100)
-
-starwars %>% 
-  filter(height>90, hair_color!="brown")
-
-starwars %>% 
-  filter(eye_color=="brown")
-
-starwars %>% 
-  filter(is.na(hair_color))
-
-starwars %>% 
-  filter(!is.na(hair_color))
-
-starwars %>% 
-  filter(str_detect(hair_color, "white"))
-
-starwars %>% 
-  select(1:3) 
-starwars %>% 
-  select(name,mass)
-starwars %>% 
-  select(contains("color"))
-starwars %>% 
-  select( -c(height, mass) )
-
-starwars %>% 
-  mutate(half_mass=mass/2)
-starwars %>% 
-  mutate(height_cat=case_when(height<=70 ~ "short",
-                              height>70 & height<=90 ~ "medium",
-                              height>90 ~ "tall"))
-starwars %>% 
-  mutate(small=if_else(mass<=mean(mass, na.rm = TRUE), 1,0))
-```
 
 
 Scoped verbs
@@ -230,10 +150,6 @@ mutate_if
 ==========================================
 
 
-```r
-starwars %>% 
-  mutate_if(is.numeric, ~round(.) )
-```
 
 select_at 
 ================= 
@@ -371,10 +287,6 @@ Downloaded data from [NHSE website](https://www.england.nhs.uk/statistics/statis
 
 
 
-```r
-sitrep <- readRDS(here::here('data', 'sitrep.RDS')) # all calls
-sitrep_60sec <- readRDS(here::here('data', 'sitrep_60sec.RDS')) # calls answered within 60sec
-```
 Look at data. Is is tidy? 
 
 
@@ -386,10 +298,6 @@ The `tidyr` package was updated early september. `Spread` and  `gather` have bee
 
 ==========================================
 
-```r
-sitrep_long <- sitrep %>% 
-  pivot_longer(-c(NHS_111_area_name, year), names_to='day_month', values_to='calls')
-```
 Our data is long! But we can make it even tidier. Suggestions? 
 
 
@@ -397,10 +305,6 @@ Sorting out the date
 ===============================
 
 
-```r
-sitrep_long <- sitrep_long %>% 
-  mutate(day_month=str_replace(day_month, '_', '-'), date=paste(year, day_month, sep='-'), date=ydm(date)) 
-```
 
 Time for you to try
 ===============================
@@ -410,11 +314,6 @@ Reshape the `sitrep_60sec` dataframe and create a date variable. Call your new d
 
 ==========================================
 
-```r
-sitrep_60sec_long <- sitrep_60sec %>% 
-  pivot_longer(-c(NHS_111_area_name, year), names_to='day_month', values_to='calls') %>% 
-    mutate(day_month=str_replace(day_month, '_', '-'), date=paste(year, day_month, sep='-'), date=ydm(date)) 
-```
 
 
 Join the two dataset
@@ -431,9 +330,6 @@ Join our two datasets
 =========================================
 
 
-```r
-sitrep_full <- full_join(sitrep_long, sitrep_60sec_long, by=c('NHS_111_area_name', 'date'), suffix=c('_all','_60sec'))
-```
 
 Play with the dataset 
 =========================================
@@ -443,14 +339,6 @@ Play with the dataset
 - Calculate % of calls answered within 60 sec over the full time period by area. Sort descending by
 
 ===========================================
-
-```r
-sitrep_full <- sitrep_full %>% 
-  select(-contains('year'), -contains('day_month')) 
-
-sitrep_full %>% 
-  mutate(calls_60_p=calls_60sec/calls_all*100)
-```
 
 ```
 # A tibble: 287 x 5
@@ -467,13 +355,6 @@ sitrep_full %>%
  9 North West inc Blackpool NH…      3047 2018-02-27        2317       76.0
 10 North West inc Blackpool NH…      3180 2018-02-28        2716       85.4
 # … with 277 more rows
-```
-
-```r
-sitrep_full %>% 
-  group_by(NHS_111_area_name) %>% 
-  summarise(calls_60_p=sum(calls_60sec, na.rm=TRUE)/sum(calls_all, na.rm=TRUE)*100) %>% 
-  arrange(desc(calls_60_p))
 ```
 
 ```

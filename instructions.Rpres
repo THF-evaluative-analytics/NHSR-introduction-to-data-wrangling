@@ -5,6 +5,11 @@ date:
 autosize: true
 font-family: 'Georgia'
 
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE)
+```
+
 What we will cover today
 ===========================================
 

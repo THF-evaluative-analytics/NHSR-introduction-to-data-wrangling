@@ -1,3 +1,9 @@
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE)
+```
+
+
+
 Introduction to data wrangling
 ========================================================
 author: Emma Vestesson 
@@ -6,9 +12,6 @@ autosize: true
 font-family: 'Georgia'
 
 
-```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = FALSE)
-```
 
 What we will cover today
 ===========================================
@@ -318,7 +321,7 @@ New tidyr package
 The `tidyr` package was updated early september. `Spread` and  `gather` have been replaced by `pivot_longer` and `pivot_wider`. 
 
 
-
+ 
 ==========================================
 ```{r}
 sitrep_long <- sitrep %>% 
@@ -328,7 +331,7 @@ Our data is long! But we can make it even tidier. Suggestions?
 
 
 Sorting out the date
-===============================
+============================================
 
 ```{r}
 sitrep_long <- sitrep_long %>% 

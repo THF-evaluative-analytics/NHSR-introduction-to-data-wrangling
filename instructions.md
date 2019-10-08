@@ -1,10 +1,13 @@
+
+
+
+
 Introduction to data wrangling
 ========================================================
 author: Emma Vestesson 
 date: 
 autosize: true
 font-family: 'Georgia'
-
 
 
 
@@ -295,14 +298,14 @@ New tidyr package
 The `tidyr` package was updated early september. `Spread` and  `gather` have been replaced by `pivot_longer` and `pivot_wider`. 
 
 
-
+ 
 ==========================================
 
 Our data is long! But we can make it even tidier. Suggestions? 
 
 
 Sorting out the date
-===============================
+============================================
 
 
 

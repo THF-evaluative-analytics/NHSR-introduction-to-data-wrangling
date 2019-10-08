@@ -152,10 +152,6 @@ pink sticker = I need help
 
 green = DONE!
 
-Try it!
-==========================================
-
-
 
 Try it!
 ===========================================
@@ -306,17 +302,15 @@ Downloaded data from [NHSE website](https://www.england.nhs.uk/statistics/statis
 
 
 ```{r}
-sitrep <- readRDS(here::here('sitrep.RDS')) # all calls
-sitrep_60sec <- readRDS(here::here('sitrep_60sec.RDS')) # calls answered within 60sec
+sitrep <- readRDS(here::here('data', 'sitrep.RDS')) # all calls
+sitrep_60sec <- readRDS(here::here('data', 'sitrep_60sec.RDS')) # calls answered within 60sec
 ```
 Look at data. Is is tidy? 
-
 
 
 New tidyr package
 ==========================================
 The `tidyr` package was updated early september. `Spread` and  `gather` have been replaced by `pivot_longer` and `pivot_wider`. 
-
 
 
 

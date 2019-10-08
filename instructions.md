@@ -153,10 +153,6 @@ pink sticker = I need help
 
 green = DONE!
 
-Try it!
-==========================================
-
-
 
 Try it!
 ===========================================
@@ -375,18 +371,128 @@ Downloaded data from [NHSE website](https://www.england.nhs.uk/statistics/statis
 
 
 
+```r
+sitrep <- readRDS(here::here('data', 'sitrep.RDS')) # all calls
+sitrep_60sec <- readRDS(here::here('data', 'sitrep_60sec.RDS')) # calls answered within 60sec
+```
+Look at data. Is is tidy? 
+
+
+New tidyr package
+==========================================
+The `tidyr` package was updated early september. `Spread` and  `gather` have been replaced by `pivot_longer` and `pivot_wider`. 
 
 
 
+==========================================
+
+```r
+sitrep_long <- sitrep %>% 
+  pivot_longer(-c(NHS_111_area_name, year), names_to='day_month', values_to='calls')
+```
+Our data is long! But we can make it even tidier. Suggestions? 
 
 
+Sorting out the date
+===============================
 
 
+```r
+sitrep_long <- sitrep_long %>% 
+  mutate(day_month=str_replace(day_month, '_', '-'), date=paste(year, day_month, sep='-'), date=ydm(date)) 
+```
+
+Time for you to try
+===============================
+
+Reshape the `sitrep_60sec` dataframe and create a date variable. Call your new dataframe `sitrep_60sec_long`.
 
 
+==========================================
+
+```r
+sitrep_60sec_long <- sitrep_60sec %>% 
+  pivot_longer(-c(NHS_111_area_name, year), names_to='day_month', values_to='calls') %>% 
+    mutate(day_month=str_replace(day_month, '_', '-'), date=paste(year, day_month, sep='-'), date=ydm(date)) 
+```
 
 
+Join the two dataset
+==========================================
+Joining data in R is very similar to sql. 
+- full_join()
+- left_join()
+- right_join()
+- inner_join()
+- anti_join()
+- semi_join()
+
+Join our two datasets
+=========================================
+
+
+```r
+sitrep_full <- full_join(sitrep_long, sitrep_60sec_long, by=c('NHS_111_area_name', 'date'), suffix=c('_all','_60sec'))
+```
+
+Play with the dataset 
+=========================================
+
+- Drop all the extra vaiables
+- Calculate % of calls answered within 60 sec over the full time period.
+- Calculate % of calls answered within 60 sec over the full time period by area. Sort descending by
+
+===========================================
+
+```r
+sitrep_full <- sitrep_full %>% 
+  select(-contains('year'), -contains('day_month')) 
+
+sitrep_full %>% 
+  mutate(calls_60_p=calls_60sec/calls_all*100)
+```
 
 ```
-Error in gzfile(file, "rb") : cannot open the connection
+# A tibble: 287 x 5
+   NHS_111_area_name            calls_all date       calls_60sec calls_60_p
+   <chr>                            <dbl> <date>           <dbl>      <dbl>
+ 1 North East England NHS 111        2272 2018-02-26        1957       86.1
+ 2 North East England NHS 111        1793 2018-02-27        1787       99.7
+ 3 North East England NHS 111        1724 2018-02-28        1654       95.9
+ 4 North East England NHS 111        1707 2018-03-01        1661       97.3
+ 5 North East England NHS 111        1819 2018-03-02        1781       97.9
+ 6 North East England NHS 111        3998 2018-03-03        3396       84.9
+ 7 North East England NHS 111        3305 2018-03-04        2625       79.4
+ 8 North West inc Blackpool NH…      3433 2018-02-26        2388       69.6
+ 9 North West inc Blackpool NH…      3047 2018-02-27        2317       76.0
+10 North West inc Blackpool NH…      3180 2018-02-28        2716       85.4
+# … with 277 more rows
 ```
+
+```r
+sitrep_full %>% 
+  group_by(NHS_111_area_name) %>% 
+  summarise(calls_60_p=sum(calls_60sec, na.rm=TRUE)/sum(calls_all, na.rm=TRUE)*100) %>% 
+  arrange(desc(calls_60_p))
+```
+
+```
+# A tibble: 41 x 2
+   NHS_111_area_name                                    calls_60_p
+   <chr>                                                     <dbl>
+ 1 Yorkshire And Humber NHS 111                               91.1
+ 2 Isle Of Wight NHS 111                                      91.0
+ 3 North East England NHS 111                                 89.4
+ 4 East London & City NHS 111                                 79.7
+ 5 South East London NHS 111                                  77.8
+ 6 Hertfordshire NHS 111                                      74.8
+ 7 North Essex NHS 111                                        74.3
+ 8 South Essex NHS 111                                        74.3
+ 9 East Kent NHS 111                                          73.5
+10 Norfolk including Great Yarmouth and Waveney NHS 111       72.7
+# … with 31 more rows
+```
+
+
+
+

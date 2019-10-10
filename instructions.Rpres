@@ -247,7 +247,7 @@ starwars %>%
 select_at 
 ================= 
  
-```{r, echo=FALSE}
+```{r}
 colour_vars <- c("hair_color", "skin_color", "eye_color")
 
 starwars %>% 
@@ -264,7 +264,7 @@ numeric_vars <- starwars %>%
  summarise_all
 ================================== 
  
-```{r, echo=FALSE}
+```{r}
 starwars %>% 
   summarise_at(numeric_vars, ~mean(.x, na.rm=TRUE))
 
@@ -277,7 +277,7 @@ starwars %>%
 Exercises
 ==========================================
 - What variables are characters? 
-- Remove all numeric observations with missing values
+- Remove all numeric variables with missing values
 - Calculate the mean of all numeric variable by homeworld.
 
 Solution
@@ -293,6 +293,15 @@ starwars %>%
 starwars %>% 
   group_by(homeworld) %>% 
   summarise_if(is.numeric, ~mean(.x, na.rm=TRUE))
+
+
+starwars %>% 
+  group_by(homeworld) %>% 
+  summarise_if(is.numeric, mean, na.rm=TRUE)
+
+starwars %>% 
+  group_by(hair_color) %>% 
+  summarise_if(is.numeric,  funs(min = min(., na.rm = FALSE), max = max(., na.rm = TRUE))) 
 
 ```
   

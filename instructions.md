@@ -22,7 +22,7 @@ Getting up to speed
 ==============================
 Workshop is aimed at advanced beginners and I will assume some familiarity with R and the tidyverse. We will spend a few minutes to refamiliarise ourselves with R.
 
-You will need to have `tidyverse` package installed and loaded.  
+You will need to have `tidyverse` and `here` packages installed and loaded. You also need to load  the 'lubridate' package.  
 
 Packages in R
 =====================
@@ -87,7 +87,35 @@ Main dplyr helper verbs
 + group_by() performs any of the above on a group-by-group basis
 + arrange() changes the ordering of rows
 
+Useful functions
+===========================================
 
++ is.factor(), is.numeric(), is.character()
++ is.na() tells you if the data is missing
++ na_if() replaces values eg. 99 with missing values
++ ! negates a function
+
+
+Example filter
+============================================
+
+
+```r
+starwars %>% 
+  filter(mass>80,  hair_color=="white")
+
+starwars %>% 
+  filter(is.na(hair_color))
+```
+
+
+Example mutate
+===============================
+
+```r
+starwars %>% 
+  mutate(height_m=height/100, bmi=mass/(height_m^2), bmi=round(bmi, 1)) 
+```
 
 Helper functions with select()
 ================================
@@ -112,28 +140,6 @@ starwars %>%
 
 starwars %>% 
   select(name, ends_with("color"))
-```
-
-Example filter
-============================================
-
-
-```r
-starwars %>% 
-  filter(mass>80,  hair_color=="white")
-
-starwars %>% 
-  filter(is.na(hair_color))
-```
-
-
-Example mutate
-===============================
-
-
-```r
-starwars %>% 
-  mutate(height_m=height/100, bmi=mass/(height_m^2), bmi=round(bmi, 1)) 
 ```
 
 

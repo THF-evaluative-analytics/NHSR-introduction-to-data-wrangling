@@ -21,6 +21,8 @@ reading in data didn't work
 
 Would be useful to have cheatsheets for dplyr
 
+Help in R
+
 ### Potential exercise
 
 Find columns with any or all missing values. 

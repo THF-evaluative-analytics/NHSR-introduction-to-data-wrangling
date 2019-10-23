@@ -86,7 +86,18 @@ Main dplyr helper verbs
 + group_by() performs any of the above on a group-by-group basis
 + arrange() changes the ordering of rows
 
-```{r, include=FALSE}
+
+dplyr syntax
+=======================================
++ All calls to dplyr verbs follow the same format:
+1. The first argument is a dataframe
+2. The subsequent arguments describe what to do to that dataframe,
+using unquoted variable names.
++ Each call returns a new dataframe (rather than overwriting the ‘old’ one)
++ Example:
+filter(.data = starwars, homeworld == “Tatooine”)
+
+```{r, include=FALSE, eval=TRUE}
 library(tidyverse)
 library(tidylog)
 library(lubridate)
@@ -105,16 +116,39 @@ Helper functions you can use within select():
 Example select()
 ===============================
 ```{r}
-# Select variables/columns 2 to 5 and save data as new_dat
-new_dat <- select(starwars, 2:5)
-
-# Drop variables height and mass (same as keeping all variables but height and mass)
-starwars %>% 
+# Drop variables height and mass (same as keeping all variables but height and mass) and save data as new_dat
+new_dat <- starwars %>% 
   select( -height, -mass) 
 
 starwars %>% 
-  select(name, ends_with("color"))
+  select(name, -ends_with("color"))
 ```
+
+
+Test select 
+===========================================
+
+starwars %>% 
+  select(birth_year) **or** starwars %>% 
+  select(-birth_year)
+```{r, eval=TRUE, echo = FALSE}
+starwars %>% 
+  select(birth_year)
+```
+
+filter()
+===========================================
++ Allows pointed row selection based on given criteria
++ First argument is the dataframe, subsequent arguments are logical
+expressions used to filter the dataframe
+
+
+Filter helper/useful functions
+===========================================
+
+- is.na() and ! to negate
+- str_detect
+
 
 Example filter
 ============================================
@@ -128,14 +162,44 @@ starwars %>%
   filter(is.na(hair_color))
 ```
 
+Test filter
+============================================
+
+Will this code run without an error?
+
+```{r, eval=FALSE}
+starwars %>% 
+  filter(height+5)
+```
+
+mutate()
+====================================================================
++ Creates new variables (columns) from existing ones
++ can be used to overwrite and old variable eg starwars %>% mutate(mass=mass+5)
++ Note: columns created with mutate() are always added to end of dataset
+
+mutate() useful functions
+====================================================================
++ Arithmetic operators (+, -, *, /, ^)
++ Log functions (like log10())
++ Offsets like lead() and lag()
++ Logical comparisons (<, <=, >, >=, !=)
++ ifelse statements (if this, then this, else this)
++ Or when more than 1 logical split then use case_when
++ Cumulative and rolling aggregates
++ Ranking (like ntile())
 
 Example mutate
-===============================
+===================================================================
 
 ```{r}
 starwars %>% 
   mutate(height_m=height/100, bmi=mass/(height_m^2), bmi=round(bmi, 1)) 
 ```
+
+Test mutate
+===================================================================
+
 
 
 Example summarise
@@ -174,7 +238,7 @@ Try it!
 
 How are you done already? 
 ============================================
-+ Select the first 3 columns of starwars
+
 + Select name and mass
 + Select columns with string `color` in them
 + Select all columns BUT height and mass
@@ -205,8 +269,7 @@ starwars %>%
 starwars %>% 
   filter(str_detect(hair_color, "white"))
 
-starwars %>% 
-  select(1:3) 
+
 starwars %>% 
   select(name,mass)
 starwars %>% 
@@ -321,8 +384,8 @@ Downloaded data from [NHSE website](https://www.england.nhs.uk/statistics/statis
 
 
 ```{r}
-sitrep <- readRDS(here::here('data', 'sitrep.RDS')) # all calls
-sitrep_60sec <- readRDS(here::here('data', 'sitrep_60sec.RDS')) # calls answered within 60sec
+sitrep <- readRDS(here::here('data', 'sitrep.rds')) # all calls
+sitrep_60sec <- readRDS(here::here('data', 'sitrep_60sec.rds')) # calls answered within 60sec
 ```
 Look at data. Is is tidy? 
 

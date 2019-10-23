@@ -22,7 +22,7 @@ Getting up to speed
 ==============================
 Workshop is aimed at advanced beginners and I will assume some familiarity with R and the tidyverse. We will spend a few minutes to refamiliarise ourselves with R.
 
-You will need to have `tidyverse` and `here` packages installed and loaded. You also need to load  the 'lubridate' package.  
+You will need to have `tidyverse` package installed and loaded.  
 
 Packages in R
 =====================
@@ -87,35 +87,18 @@ Main dplyr helper verbs
 + group_by() performs any of the above on a group-by-group basis
 + arrange() changes the ordering of rows
 
-Useful functions
-===========================================
 
-+ is.factor(), is.numeric(), is.character()
-+ is.na() tells you if the data is missing
-+ na_if() replaces values eg. 99 with missing values
-+ ! negates a function
-
-
-Example filter
-============================================
-
-
-```r
-starwars %>% 
-  filter(mass>80,  hair_color=="white")
-
-starwars %>% 
-  filter(is.na(hair_color))
-```
+dplyr syntax
+=======================================
++ All calls to dplyr verbs follow the same format:
+1. The first argument is a dataframe
+2. The subsequent arguments describe what to do to that dataframe,
+using unquoted variable names.
++ Each call returns a new dataframe (rather than overwriting the ‘old’ one)
++ Example:
+filter(.data = starwars, homeworld == “Tatooine”)
 
 
-Example mutate
-===============================
-
-```r
-starwars %>% 
-  mutate(height_m=height/100, bmi=mass/(height_m^2), bmi=round(bmi, 1)) 
-```
 
 Helper functions with select()
 ================================
@@ -131,16 +114,105 @@ Example select()
 ===============================
 
 ```r
-# Select variables/columns 2 to 5 and save data as new_dat
-new_dat <- select(starwars, 2:5)
-
-# Drop variables height and mass (same as keeping all variables but height and mass)
-starwars %>% 
+# Drop variables height and mass (same as keeping all variables but height and mass) and save data as new_dat
+new_dat <- starwars %>% 
   select( -height, -mass) 
 
 starwars %>% 
-  select(name, ends_with("color"))
+  select(name, -ends_with("color"))
 ```
+
+
+Test select 
+===========================================
+
+starwars %>% 
+  select(birth_year) **or** starwars %>% 
+  select(-birth_year)
+
+```
+# A tibble: 87 x 1
+   birth_year
+        <dbl>
+ 1       19  
+ 2      112  
+ 3       33  
+ 4       41.9
+ 5       19  
+ 6       52  
+ 7       47  
+ 8       NA  
+ 9       24  
+10       57  
+# … with 77 more rows
+```
+
+filter()
+===========================================
++ Allows pointed row selection based on given criteria
++ First argument is the dataframe, subsequent arguments are logical
+expressions used to filter the dataframe
+
+
+Filter helper/useful functions
+===========================================
+
+- is.na() and ! to negate
+- str_detect
+
+
+Example filter
+============================================
+
+
+```r
+starwars %>% 
+  filter(mass>80,  hair_color=="white")
+
+starwars %>% 
+  filter(is.na(hair_color))
+```
+
+Test filter
+============================================
+
+Will this code run without an error?
+
+
+```r
+starwars %>% 
+  filter(height+5)
+```
+
+mutate()
+====================================================================
++ Creates new variables (columns) from existing ones
++ can be used to overwrite and old variable eg starwars %>% mutate(mass=mass+5)
++ Note: columns created with mutate() are always added to end of dataset
+
+mutate() useful functions
+====================================================================
++ Arithmetic operators (+, -, *, /, ^)
++ Log functions (like log10())
++ Offsets like lead() and lag()
++ Logical comparisons (<, <=, >, >=, !=)
++ ifelse statements (if this, then this, else this)
++ Or when more than 1 logical split then use case_when
++ Cumulative and rolling aggregates
++ Ranking (like ntile())
+
+Example mutate
+===================================================================
+
+
+```r
+starwars %>% 
+  mutate(height_m=height/100, bmi=mass/(height_m^2), bmi=round(bmi, 1)) 
+```
+
+Test mutate
+===================================================================
+
 
 
 Example summarise
@@ -179,7 +251,7 @@ Try it!
 
 How are you done already? 
 ============================================
-+ Select the first 3 columns of starwars
+
 + Select name and mass
 + Select columns with string `color` in them
 + Select all columns BUT height and mass
@@ -211,8 +283,7 @@ starwars %>%
 starwars %>% 
   filter(str_detect(hair_color, "white"))
 
-starwars %>% 
-  select(1:3) 
+
 starwars %>% 
   select(name,mass)
 starwars %>% 
@@ -253,17 +324,38 @@ select_at
 ================= 
  
 
+```r
+colour_vars <- c("hair_color", "skin_color", "eye_color")
+
+starwars %>% 
+  select_at(colour_vars)
+
+starwars %>% 
+  select_at(vars(-colour_vars))
+
+numeric_vars <- starwars %>%  
+  select_if(is.numeric) %>% 
+  names()
+```
  
  summarise_all
 ================================== 
  
 
+```r
+starwars %>% 
+  summarise_at(numeric_vars, ~mean(.x, na.rm=TRUE))
+
+starwars %>% 
+  group_by(hair_color) %>% 
+  summarise_if(is.numeric, list(min=min, max=max))
+```
  
  
 Exercises
 ==========================================
 - What variables are characters? 
-- Remove all numeric observations with missing values
+- Remove all numeric variables with missing values
 - Calculate the mean of all numeric variable by homeworld.
 
 Solution
@@ -288,8 +380,8 @@ Downloaded data from [NHSE website](https://www.england.nhs.uk/statistics/statis
 
 
 ```r
-sitrep <- readRDS(here::here('data', 'sitrep.RDS')) # all calls
-sitrep_60sec <- readRDS(here::here('data', 'sitrep_60sec.RDS')) # calls answered within 60sec
+sitrep <- readRDS(here::here('data', 'sitrep.rds')) # all calls
+sitrep_60sec <- readRDS(here::here('data', 'sitrep_60sec.rds')) # calls answered within 60sec
 ```
 Look at data. Is is tidy? 
 

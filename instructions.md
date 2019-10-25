@@ -74,6 +74,14 @@ Rstudio tips
 - start a new R session (keyboard short ctrl+shift+F10)
 - the :: operator is your friend eg dplyr::select()
 
+Useful functions
+===========================================
+
++ is.factor(), is.numeric(), is.character() to test the variable type
++ is.na() tells you if the data is missing
++ na_if() replaces values eg. 99 with missing values
++ ! negates a function
+
 Main dplyr verbs 
 ========================================================
 Grammar of data manipulation:
@@ -157,7 +165,7 @@ expressions used to filter the dataframe
 Filter helper/useful functions
 ===========================================
 
-- is.na() and ! to negate
+
 - str_detect
 
 

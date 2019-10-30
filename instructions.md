@@ -445,7 +445,6 @@ A mutating join allows you to combine variables from two tables. It first matche
 Join our two data sets
 =========================================
 
-
 ```r
 sitrep_full <- full_join(sitrep_long, sitrep_60sec_long, by=c('NHS_111_area_name', 'date'), suffix=c('_all','_60sec'))
 ```

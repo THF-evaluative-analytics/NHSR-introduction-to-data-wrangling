@@ -131,7 +131,7 @@ starwars %>%
 ```
 
 
-Test select 
+Which bit of code produced the output?
 ===========================================
 
 starwars %>% 
@@ -166,7 +166,8 @@ Filter helper/useful functions
 ===========================================
 
 
-- str_detect
+- `str_detect()`
+- `!` to negate a function
 
 
 Example filter
@@ -181,10 +182,8 @@ starwars %>%
   filter(is.na(hair_color))
 ```
 
-Test filter
-============================================
-
 Will this code run without an error?
+============================================
 
 
 ```r

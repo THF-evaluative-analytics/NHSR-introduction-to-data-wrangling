@@ -3,11 +3,8 @@ title: "Introduction to data wrangling"
 author: "Emma Vestesson"
 date: "05-11-2019"
 output:
-  slidy_presentation: default
   beamer_presentation: default
-  ioslides_presentation: default
-font-family: Georgia
-autosize: yes
+  slidy_presentation: default
 ---
 
 What we will cover today
@@ -70,12 +67,14 @@ General R tips
 ========================================================
 
 Getting help
+
 - ?`functionname` will search all loaded packages
 - ??`functionname` will search all installed packages
 - Most packages have vignettes
 - Most tidyverse packages have cheatsheet (under help in the menu)
 
 Debugging
+
 - start a new R session (keyboard short ctrl+shift+F10)
 - the :: operator is your friend eg dplyr::select()
 
@@ -83,13 +82,16 @@ Debugging
 Dlyr verbs 
 ========================================================
 Grammar of data manipulation:
+
 Main verbs
+
 + select() picks variables (columns) based on their names
 + filter() allows row selection based on given criteria
 + mutate() creates new variables (columns) from existing ones
 + summarise() reduces multiple values down to a single summary
 
 helper verbs
+
 + group_by() performs any of the above on a group-by-group basis
 + arrange() changes the ordering of rows
 

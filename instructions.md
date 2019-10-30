@@ -1,14 +1,11 @@
-
-
-
-
-Introduction to data wrangling
-========================================================
+---
+output:  beamer_presentation
+title : Introduction to data wrangling
 author: Emma Vestesson 
-date: 
+date: 05-11-2019
 autosize: true
 font-family: 'Georgia'
-
+---
 
 
 What we will cover today
@@ -22,7 +19,7 @@ Getting up to speed
 ==============================
 Workshop is aimed at advanced beginners and I will assume some familiarity with R and the tidyverse. We will spend a few minutes to refamiliarise ourselves with R.
 
-You will need to have `tidyverse` package installed and loaded.  
+You will need to have `tidyverse` packages installed and loaded.  
 
 Packages in R
 =====================
@@ -44,6 +41,7 @@ The pipe
 ========================================
 
 Simplifying R code with pipes (%>%)
+
 - Easy way to pass data through functions without nesting
 - First argument of each function is “piped” in to reduce redundancy
 - f(x) is the same as x %>% f()
@@ -74,17 +72,10 @@ Rstudio tips
 - start a new R session (keyboard short ctrl+shift+F10)
 - the :: operator is your friend eg dplyr::select()
 
-Useful functions
-===========================================
-
-+ is.factor(), is.numeric(), is.character() to test the variable type
-+ is.na() tells you if the data is missing
-+ na_if() replaces values eg. 99 with missing values
-+ ! negates a function
-
 Main dplyr verbs 
 ========================================================
 Grammar of data manipulation:
+
 + select() picks variables (columns) based on their names
 + filter() allows row selection based on given criteria
 + mutate() creates new variables (columns) from existing ones
@@ -99,6 +90,7 @@ Main dplyr helper verbs
 dplyr syntax
 =======================================
 + All calls to dplyr verbs follow the same format:
+
 1. The first argument is a dataframe
 2. The subsequent arguments describe what to do to that dataframe,
 using unquoted variable names.
@@ -112,6 +104,7 @@ Helper functions with select()
 ================================
 
 Helper functions you can use within select():
+
 + starts_with(“e_”) matches names that begin with “e_”
 + ends_with(“_end”) matches names that ends with “_end”
 + contains(“_h12”) matches names that contain “_h12”
@@ -131,7 +124,7 @@ starwars %>%
 ```
 
 
-Which bit of code produced the output?
+Test select 
 ===========================================
 
 starwars %>% 
@@ -165,9 +158,9 @@ expressions used to filter the dataframe
 Filter helper/useful functions
 ===========================================
 
-
-- `str_detect()`
-- `!` to negate a function
+- is.na() and ! to negate
+- str_detect() to search for a string
+- Logical comparisons (<, <=, >, >=, !=)
 
 
 Example filter
@@ -180,33 +173,36 @@ starwars %>%
 
 starwars %>% 
   filter(is.na(hair_color))
+  
+
 ```
 
 Will this code run without an error?
 ============================================
-
 
 ```r
 starwars %>% 
   filter(height+5)
 ```
 
-mutate()
+mutate() (and transmute())
 ====================================================================
-+ Creates new variables (columns) from existing ones
++ Mutate creates new variables (columns) from existing ones and keeps existing ones
 + can be used to overwrite and old variable eg starwars %>% mutate(mass=mass+5)
 + Note: columns created with mutate() are always added to end of dataset
+
++ transmute() creates new variables and drops existing ones
 
 mutate() useful functions
 ====================================================================
 + Arithmetic operators (+, -, *, /, ^)
 + Log functions (like log10())
 + Offsets like lead() and lag()
-+ Logical comparisons (<, <=, >, >=, !=)
 + ifelse statements (if this, then this, else this)
 + Or when more than 1 logical split then use case_when
 + Cumulative and rolling aggregates
 + Ranking (like ntile())
++ toupper, str_replace, str_to_title for character variables
 
 Example mutate
 ===================================================================
@@ -217,14 +213,16 @@ starwars %>%
   mutate(height_m=height/100, bmi=mass/(height_m^2), bmi=round(bmi, 1)) 
 ```
 
-Test mutate
+How many variables will the resulting dataset have
 ===================================================================
 
-
+```r
+starwars %>% 
+  transmute(height_m=height/100) 
+```
 
 Example summarise
 ===================================
-
 
 ```r
 starwars %>%
@@ -233,6 +231,17 @@ starwars %>%
 starwars %>%
   group_by(homeworld) %>% 
   summarise(height_max = max(height, na.rm=TRUE))
+```
+
+How many rows will the resulting data set have?
+====================================
+
+1 row (pink) **or** 87 rows (green)
+
+
+```r
+starwars %>%
+  summarise(mass_mean = mean(mass, na.rm=TRUE))
 ```
 
 
@@ -248,41 +257,32 @@ green = DONE!
 Try it!
 ===========================================
 
-+ Find the rows where height > 100
 + Find the rows where height > 90 and hair_color is not brown
 + Find the rows where eye_color is  brown
-+ Find the rows where hair_color is missing
-+ Find the rows where hair_color is NOT missing
++ Select name and mass
++ Find the rows where hair_color is **NOT** missing
 + Find the rows where hair_color is white
 + Find the rows where hair_color contains the word white
-
-How are you done already? 
-============================================
-
-+ Select name and mass
-+ Select columns with string `color` in them
++ Select columns with the word `color` in them
 + Select all columns BUT height and mass
 + Create a new variable called `half_mass` that is half of mass
-+ Create variable `height_cat` with 3 categories "short", "medium", "tall" if `height` [0,70], ]70,90], ]90,inf[   
++ Create variable `height_cat` with 4 categories "short", "medium", "tall" if `height` [0,70], ]70,90], ]90,inf[  and 'Not recorded' if `height` is missing. 
 + Create variable `small` that is 1 if mass is less than the mean of `mass` and 0 otherwise. 
 
 
 Solution
 ============================================
 
-
 ```r
-starwars %>% 
-  filter(height>100)
 
 starwars %>% 
   filter(height>90, hair_color!="brown")
 
 starwars %>% 
   filter(eye_color=="brown")
-
+  
 starwars %>% 
-  filter(is.na(hair_color))
+  select(name,mass)
 
 starwars %>% 
   filter(!is.na(hair_color))
@@ -290,11 +290,9 @@ starwars %>%
 starwars %>% 
   filter(str_detect(hair_color, "white"))
 
-
-starwars %>% 
-  select(name,mass)
 starwars %>% 
   select(contains("color"))
+  
 starwars %>% 
   select( -c(height, mass) )
 
@@ -303,7 +301,8 @@ starwars %>%
 starwars %>% 
   mutate(height_cat=case_when(height<=70 ~ "short",
                               height>70 & height<=90 ~ "medium",
-                              height>90 ~ "tall"))
+                              height>90 ~ "tall",
+                              is.na(height) ~ "Not recorded"))
 starwars %>% 
   mutate(small=if_else(mass<=mean(mass, na.rm = TRUE), 1,0))
 ```
@@ -317,17 +316,23 @@ Scoped verbs
   - _if pick variables based on a predicate function like is.numeric() or a user defined function function(x) do_this(x) 
   + _at pick variables using the same syntax as select().
   + _all operates on all variables
+  
+  
 
-mutate_if
+mutate friends
 ==========================================
 
 
 ```r
 starwars %>% 
   mutate_if(is.numeric, ~round(.) )
+  
+starwars %>% 
+  mutate_at(vars(contains('color')), toupper)
+  
 ```
 
-select_at 
+select friends
 ================= 
  
 
@@ -339,37 +344,60 @@ starwars %>%
 
 starwars %>% 
   select_at(vars(-colour_vars))
+  
+starwars %>%
+  select_if(~n_distinct(.) < 10)
 
 numeric_vars <- starwars %>%  
   select_if(is.numeric) %>% 
   names()
 ```
  
- summarise_all
+ summarise friends
 ================================== 
  
+```{r}
 
-```r
 starwars %>% 
   summarise_at(numeric_vars, ~mean(.x, na.rm=TRUE))
 
 starwars %>% 
   group_by(hair_color) %>% 
-  summarise_if(is.numeric, list(min=min, max=max))
+  summarise_if(is.numeric,  list(min = ~min(., na.rm = FALSE), max = ~max(., na.rm = TRUE))) 
+  
+  
 ```
  
  
 Exercises
 ==========================================
-- What variables are characters? 
-- Remove all numeric variables with missing values
-- Calculate the mean of all numeric variable by homeworld.
+- What variables are not characters? 
+- For all numeric variables, create new variables with the mean by homeworld. The new variables should have the suffix `mean` eg `height_mean`. (Bonus, move the new variables so they are after `name`. Try ?everything )
+- For all character variables, replace missing values by 'not recorded' 
+
 
 Solution
 ==========================================
-  
 
-  
+```{r, echo=FALSE}
+starwars %>% 
+  select_if(~!is.character(.)) %>% 
+  names()
+
+starwars %>% 
+  group_by(homeworld) %>% 
+  mutate_if(is.numeric, list(mean=~mean(.x, na.rm=TRUE))) %>% 
+  select(name, ends_with('mean'), everything())
+
+starwars %>% 
+  group_by(homeworld) %>% 
+  summarise_if(is.numeric, mean, na.rm=TRUE)
+
+starwars %>%
+  mutate_if(is.character, list(~replace_na(., "not recorded")))
+
+```
+
   
 Tidy data
 ==========================================
@@ -397,8 +425,6 @@ New tidyr package
 ==========================================
 The `tidyr` package was updated early September. `Spread` and  `gather` have been replaced by `pivot_longer` and `pivot_wider`. 
 
-
- 
 ==========================================
 
 ```r
@@ -422,7 +448,7 @@ Time for you to try
 
 Reshape the `sitrep_60sec` data frame and create a date variable. Call your new data frame `sitrep_60sec_long`.
 
-
+Solution
 ==========================================
 
 ```r
@@ -431,16 +457,21 @@ sitrep_60sec_long <- sitrep_60sec %>%
     mutate(day_month=str_replace(day_month, '_', '-'), date=paste(year, day_month, sep='-'), date=ydm(date)) 
 ```
 
-
 Join the two data set
 ==========================================
 Joining data in R is very similar to sql. 
-- full_join()
-- left_join()
-- right_join()
-- inner_join()
-- anti_join()
-- semi_join()
+
+
+Mutating joins
+==========================================================
+A mutating join allows you to combine variables from two tables. It first matches observations by their keys, then copies across variables from one table to the other.
+
+- inner_join(x,y) only keeps observations where in both
+- full_join(x,y) keeps all observations even in not in both
+- left_join(x,y) keeps all observations in x
+- right_join(x,y) keeps all observations in y
+
+
 
 Join our two data sets
 =========================================
@@ -454,8 +485,10 @@ Play with the data set
 =========================================
 
 - Drop all the extra variables
-- Calculate % of calls answered within 60 sec over the full time period.
-- Calculate % of calls answered within 60 sec over the full time period by area. Sort descending by
+- Create a new variable called `calls_60_p` with % of calls answered within 60 sec.
+- Which area had the most calls in total looking at the full time period?
+- Calculate % of calls answered within 60 sec over the full time period by area and only keep the areas with the top 10 % answered. 
+
 
 ===========================================
 
@@ -468,10 +501,21 @@ sitrep_full %>%
 
 sitrep_full %>% 
   group_by(NHS_111_area_name) %>% 
-  summarise(calls_60_p=sum(calls_60sec, na.rm=TRUE)/sum(calls_all, na.rm=TRUE)*100) %>% 
-  arrange(desc(calls_60_p))
+  summarise(calls_60_p=sum(calls_60sec, na.rm=TRUE)/sum(calls_all, na.rm=TRUE)*100) %>%
+  arrange(calls_60_p) 
+
 ```
 
+Filtering joins
+========================================================
+Filtering joins match observations in the same way as mutating joins, but affect the observations, not the variables.
 
+- anti_join(x,y) drops all observations in x that have a match in y
+- semi_join(x,y) keeps all observations in x that have a match in y
 
+Messy data
+======================================
+```r
+sitrep_60sec_long_corrupt <- readRDS(here::here('data', 'sitrep_60sec_long_corrupt.rds') )
+```
 

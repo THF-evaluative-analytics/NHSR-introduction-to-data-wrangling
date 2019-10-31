@@ -44,7 +44,7 @@ sitrep_clinical_input_corrupt_long <- sitrep_clinical_input_corrupt %>%
   select(-contains('year'), -contains('day_month')) 
 
 
-saveRDS(sitrep_clinical_input_corrupt_long, here::here('sitrep_clinical_input_corrupt_long.rds'))
+saveRDS(sitrep_clinical_input_corrupt_long, here::here('data',  'sitrep_clinical_input_corrupt_long.rds'))
 
 
 

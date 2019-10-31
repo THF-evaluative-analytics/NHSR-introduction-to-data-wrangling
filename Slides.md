@@ -86,8 +86,10 @@ Grammar of data manipulation:
 Main verbs
 
 + select() picks variables (columns) based on their names
++ _rename() changes the names of variables_
 + filter() allows row selection based on given criteria
 + mutate() creates new variables (columns) from existing ones
++ _transmute() creates new variables (columns) from existing ones but deletes all other variables_
 + summarise() reduces multiple values down to a single summary
 
 helper verbs
@@ -98,7 +100,7 @@ helper verbs
 
 dplyr syntax
 =======================================
-+ All calls to dplyr verbs follow the same format:
+All calls to dplyr verbs follow the same format:
 
 1. The first argument is a dataframe
 2. The subsequent arguments describe what to do to that dataframe,
@@ -145,6 +147,29 @@ starwars %>%
 10       57  
 # … with 77 more rows
 ```
+
+Example rename()
+===============================
+data %>% 
+  rename(newname=oldname)
+
+```r
+starwars %>% 
+  rename( weight=mass) 
+
+```
+
+What's the name of the new variable?
+===========================================
+
+age  (pink) **or** birth_year (green)
+
+```r
+starwars %>% 
+  rename(age=birth_year) 
+
+```
+
 
 filter()
 ===========================================
@@ -202,7 +227,8 @@ Example mutate
 
 ```r
 starwars %>% 
-  mutate(height_m=height/100, bmi=mass/(height_m^2), bmi=round(bmi, 1)) 
+  mutate(height_m=height/100, bmi=mass/(height_m^2),
+  bmi=round(bmi, 1)) 
 ```
 
 How many variables will the resulting dataset have
@@ -212,6 +238,14 @@ How many variables will the resulting dataset have
 starwars %>% 
   transmute(height_m=height/100) 
 ```
+
+Summarise
+====================================
+
++ summarise reduces multiple values down to a single summary
++ group_by applies dplyr verbs by group and is often used before a summarise statement
++ use `ungroup` to ungroup your dataframe and avoid weird errors 
+
 
 Example summarise
 ===================================
@@ -346,7 +380,8 @@ starwars %>%
 ```
 Time for you to try again!
 ==========================================
-- What variables are not characters? 
+- What variables are not characters?
+- Make all variable names upper case
 - For all numeric variables, create new variables with the mean by homeworld. The new variables should have the suffix `mean` eg `height_mean`. (Bonus, move the new variables so they are after `name`. Try ?everything )
 - For all character variables, replace missing values by 'not recorded' 
 
